@@ -1,0 +1,6 @@
+# created by virtualenv automatically
+.env
+.idea
+__pycache__
+/venv
+sync.py
