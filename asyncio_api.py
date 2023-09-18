@@ -3,8 +3,6 @@ import aiohttp
 import datetime
 from pprint import pprint
 
-import requests
-
 from models import Base, SwapiPeople, Session, engine
 from more_itertools import chunked
 
@@ -59,8 +57,12 @@ async def get_people(people_id):
                 json_item = await resp.json()
                 vehicles_list.append(json_item['name'])
 
+        del json_data['created']
+        del json_data['edited']
+        del json_data['url']
+        
         add_data = {
-            'id': people_id,
+            'people_id': people_id,
             'homeworld': homeworld,
             'films': ",".join(films_list),
             'species': ",".join(species_list),
@@ -80,25 +82,9 @@ async def insert_to_db(people_json_list):
     async with Session() as session:
         for json_data in people_json_list:
             if 'detail' not in json_data:
-                swapi_people_list = [SwapiPeople(
-                    name=json_data['name'],
-                    person_id=json_data['id'],
-                    birth_year=json_data['birth_year'],
-                    eye_color=json_data['eye_color'],
-                    films=json_data['films'],
-                    gender=json_data['gender'],
-                    hair_color=json_data['hair_color'],
-                    height=json_data['height'],
-                    homeworld=json_data['homeworld'],
-                    mass=json_data['mass'],
-                    skin_color=json_data['skin_color'],
-                    species=json_data['species'],
-                    starships=json_data['starships'],
-                    vehicles=json_data['vehicles'],
-                )]
-            session.add_all(swapi_people_list)
+                swapi_people_list = SwapiPeople(**json_data)
+            session.add(swapi_people_list)
         await session.commit()
-
 
 async def main():
     async with engine.begin() as con:

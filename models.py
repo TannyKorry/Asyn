@@ -24,7 +24,7 @@ class SwapiPeople(Base):
     __tablename__ = "Heroes"
 
     id = Column(Integer, primary_key=True)
-    person_id = Column(Integer)
+    people_id = Column(Integer)
     name = Column(String)
     eye_color = Column(String)
     birth_year = Column(String)
