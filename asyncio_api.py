@@ -60,7 +60,7 @@ async def get_people(people_id):
         del json_data['created']
         del json_data['edited']
         del json_data['url']
-        
+
         add_data = {
             'people_id': people_id,
             'homeworld': homeworld,
@@ -93,7 +93,7 @@ async def main():
     cor = get_q_people()
     q = await cor
 
-    for ids_chunk in chunked(range(1, q+1), MAX_CHUNK_SIZE):
+    for ids_chunk in chunked(range(1, q+5), MAX_CHUNK_SIZE):
 
         coros = [get_people(people_id) for people_id in ids_chunk]
         people_json_list = await asyncio.gather(*coros)
